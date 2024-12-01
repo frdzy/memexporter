@@ -20,8 +20,8 @@ export default async () => {
 
     console.info(
       '\n  No seed data, skipping. See scripts/seed.ts to start seeding your database!\n'
-    )
+    );
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};

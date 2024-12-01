@@ -1,5 +1,5 @@
 // import { Link, routes } from '@redwoodjs/router'
-import { Metadata } from '@redwoodjs/web'
+import { Metadata } from '@redwoodjs/web';
 
 const HomePage = () => {
   return (
@@ -15,7 +15,7 @@ const HomePage = () => {
           `<Link to={routes.home()}>Home</Link>`
       */}
     </>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

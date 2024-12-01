@@ -1,14 +1,14 @@
-import type { ReactNode } from 'react'
+import type { ReactNode } from 'react';
 
-import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
-import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
+import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web';
+import { RedwoodApolloProvider } from '@redwoodjs/web/apollo';
 
-import FatalErrorPage from 'src/pages/FatalErrorPage'
+import FatalErrorPage from 'src/pages/FatalErrorPage';
 
-import './index.css'
+import './index.css';
 
 interface AppProps {
-  children?: ReactNode
+  children?: ReactNode;
 }
 
 const App = ({ children }: AppProps) => (
@@ -17,6 +17,6 @@ const App = ({ children }: AppProps) => (
       <RedwoodApolloProvider>{children}</RedwoodApolloProvider>
     </RedwoodProvider>
   </FatalErrorBoundary>
-)
+);
 
-export default App
+export default App;
