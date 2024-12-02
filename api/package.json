@@ -4,6 +4,10 @@
   "private": true,
   "dependencies": {
     "@redwoodjs/api": "8.4.1",
-    "@redwoodjs/graphql-server": "8.4.1"
+    "@redwoodjs/graphql-server": "8.4.1",
+    "papaparse": "^5.4.1"
+  },
+  "devDependencies": {
+    "@types/papaparse": "^5"
   }
 }
