@@ -15,7 +15,7 @@ generator client {
 }
 
 model UserExample {
-  id                String              @id
+  id                String              @id @default(uuid())
   email             String
   name              String?
 }
@@ -25,7 +25,9 @@ enum BlogImportType {
 }
 
 model BlogImport {
-  id                String              @id
+  id                String              @id @default(uuid())
   rawJson           String
   type              BlogImportType
+  publishTime       DateTime
+  importTime        DateTime
 }

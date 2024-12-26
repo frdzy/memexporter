@@ -1,6 +1,8 @@
 // import { Link, routes } from '@redwoodjs/router'
 import { FileField, Form, Submit } from '@redwoodjs/forms';
 import { Metadata, useMutation } from '@redwoodjs/web';
+import { useState } from 'react';
+import { useForm } from '@redwoodjs/forms';
 
 import {
   CreateImportMutation,
@@ -14,14 +16,22 @@ const CREATE_IMPORT = gql`
 `;
 
 const ImportPage = () => {
+  const formMethods = useForm();
   const [createImport] = useMutation<
     CreateImportMutation,
     CreateImportMutationVariables
   >(CREATE_IMPORT);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onSubmit = (data) => {
-    console.log('data', data);
-    createImport({ variables: { input: data } });
+  const onSubmit = async ({ files }: { files: Array<File> }) => {
+    console.log('data', { files });
+    setIsLoading(true);
+    try {
+      await createImport({ variables: { input: { files } } });
+      formMethods.reset();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -30,9 +40,9 @@ const ImportPage = () => {
 
       <h1>ImportPage</h1>
 
-      <Form onSubmit={onSubmit}>
+      <Form formMethods={formMethods} onSubmit={onSubmit}>
         <FileField name="files" multiple={true} />
-        <Submit>Import</Submit>
+        <Submit disabled={isLoading}>Import</Submit>
       </Form>
     </>
   );
