@@ -1,22 +1,10 @@
 import type { MutationResolvers } from 'types/graphql';
 import Papa from 'papaparse';
 import { db } from 'src/lib/db';
-
-type LivejournalImport = {
-  itemid: number;
-  eventtime: Date;
-  logtime: Date;
-  subject: string;
-  event: string;
-  security: string;
-  allowmask: number;
-  current_music?: string;
-  current_mood?: string;
-};
-
-function isRecord(obj: unknown): obj is Record<string, unknown> {
-  return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
-}
+import {
+  Livejournal,
+  LivejournalImport,
+} from 'src/lib/data_providers/livejournal';
 
 export const createImport: MutationResolvers['createImport'] = async ({
   input,
@@ -38,37 +26,10 @@ export const createImport: MutationResolvers['createImport'] = async ({
 
     const results: Array<LivejournalImport> = [];
     for (const rawResult of r.value) {
-      if (
-        !isRecord(rawResult) ||
-        typeof rawResult.itemid !== 'string' ||
-        typeof rawResult.eventtime !== 'string' ||
-        typeof rawResult.logtime !== 'string' ||
-        typeof rawResult.subject !== 'string' ||
-        typeof rawResult.event !== 'string' ||
-        typeof rawResult.security !== 'string' ||
-        typeof rawResult.allowmask !== 'string'
-      ) {
-        console.log('failed validation', rawResult);
-        continue;
+      const validatedResult = Livejournal.validate(rawResult);
+      if (validatedResult) {
+        results.push(validatedResult);
       }
-      const {
-        itemid,
-        eventtime,
-        logtime,
-        subject,
-        event,
-        security,
-        allowmask,
-      } = rawResult;
-      results.push({
-        itemid: +itemid,
-        eventtime: new Date(eventtime),
-        logtime: new Date(logtime),
-        subject,
-        event,
-        security,
-        allowmask: +allowmask,
-      });
     }
     return results;
   });

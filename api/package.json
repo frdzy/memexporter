@@ -3,8 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@notionhq/client": "^2.2.15",
     "@redwoodjs/api": "8.4.1",
     "@redwoodjs/graphql-server": "8.4.1",
+    "@tryfabric/martian": "^1.2.4",
+    "hast-util-from-html": "^2.0.3",
+    "hast-util-to-mdast": "^10.1.1",
+    "mdast-util-to-markdown": "^2.1.2",
     "papaparse": "^5.4.1"
   },
   "devDependencies": {
