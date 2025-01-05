@@ -1,6 +1,6 @@
 export const schema = gql`
   input CreateExportInput {
-    test: Boolean
+    isDryRun: Boolean
   }
   type Mutation {
     createExport(input: CreateExportInput!): Boolean! @requireAuth

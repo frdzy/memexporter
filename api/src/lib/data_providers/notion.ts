@@ -4,11 +4,15 @@ import { markdownToBlocks } from '@tryfabric/martian';
 
 import { Livejournal } from 'src/lib/data_providers/livejournal';
 import { db } from 'src/lib/db';
-import { convertHtmlToMarkdown } from 'src/lib/data_providers/markdown';
+import { convertHtmlToMarkdown } from 'src/lib/processors/markdown';
 
+type Config = {
+  isDryRun: boolean;
+};
 export class Notion {
   static async export(
-    record: Prisma.Result<typeof db.blogImport, {}, 'findMany'>[number]
+    record: Prisma.Result<typeof db.blogImport, {}, 'findMany'>[number],
+    config: Config
   ): Promise<null> {
     const processedEntry = Livejournal.validateJson(record.rawJson);
     if (!processedEntry) {
@@ -19,14 +23,12 @@ export class Notion {
     const { results } = await notion.blocks.children.list({
       block_id: pageId,
     });
-    console.log(results);
 
     let dbBlockId: string | null = null;
     for (const r of results) {
       if (isFullBlock(r)) {
         if (r.type === 'child_database') {
           dbBlockId = r.id;
-          console.log('existing dbBlockId: ' + dbBlockId);
           break;
         }
       }
@@ -51,11 +53,36 @@ export class Notion {
         is_inline: true,
       });
       dbBlockId = result.id;
-      console.log('created dbBlockId: ' + dbBlockId);
     }
 
     const markdown = await convertHtmlToMarkdown(processedEntry.event);
-    const children = markdownToBlocks(markdown) as any;
+    console.log('markdown');
+    console.log(markdown);
+    const children = (
+      markdownToBlocks(markdown, {
+        notionLimits: { truncate: true },
+      }).slice(0, 100) as any
+    ).map((o) => {
+      if (o.type === 'table') {
+        console.log('table', o);
+        if (o.table && o.table.children && o.table.children.length > 100) {
+          return {
+            ...o,
+            table: {
+              ...o.table,
+              children: o.table.children.slice(0, 100),
+            },
+          };
+        }
+      }
+      return o;
+    });
+    console.log('blocks');
+    console.log(children);
+    if (config.isDryRun) {
+      return null;
+    }
+
     const result = await notion.pages.create({
       parent: { database_id: dbBlockId },
       properties: {
@@ -90,7 +117,6 @@ export class Notion {
       children,
     });
 
-    console.log('results', result);
     return null;
   }
 }

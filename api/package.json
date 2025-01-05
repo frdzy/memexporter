@@ -7,10 +7,18 @@
     "@redwoodjs/api": "8.4.1",
     "@redwoodjs/graphql-server": "8.4.1",
     "@tryfabric/martian": "^1.2.4",
-    "hast-util-from-html": "^2.0.3",
-    "hast-util-to-mdast": "^10.1.1",
+    "mdast-util-from-markdown": "^2.0.2",
+    "mdast-util-gfm-table": "^2.0.0",
+    "mdast-util-newline-to-break": "^2.0.0",
     "mdast-util-to-markdown": "^2.1.2",
-    "papaparse": "^5.4.1"
+    "micromark-extension-gfm-table": "^2.1.0",
+    "papaparse": "^5.4.1",
+    "rehype-parse": "^9.0.1",
+    "rehype-remark": "^10.0.0",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-stringify": "^11.0.0",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@types/papaparse": "^5"
